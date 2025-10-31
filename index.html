@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explor - Cadastro/Login</title>
+  <link rel="stylesheet" href="index.css" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container">
+  <div class="image-side">
+    <div class="overlay">
+      <div class="top-bar">
+        <h2 class="logo">&copy;EXPLOR</h2>
+      </div>
+      <div class="text">
+        <h3>Jogando jogos,<br />Criando Memórias</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-side">
+    <div class="form-container">
+      <!-- Criar Conta -->
+      <form id="signupForm">
+        <h1>Criar conta</h1>
+        <p>Já tem uma conta? 
+          <button type="button" class="switch-btn" id="toLoginBtn">Entrar</button>
+        </p>
+
+        <div class="name-group">
+          <input type="text" id="firstName" placeholder="Nome" required />
+          <input type="text" id="lastName" placeholder="Sobrenome" required />
+        </div>
+
+        <div class="username-group">
+          <input type="email" id="signupEmail" placeholder="Email" required />
+          <i class="bx bx-user "></i>
+        </div>
+
+        <div class="password-group">
+          <input type="password" id="signupPassword" placeholder="Digite sua senha" required />
+          <i class='bx bx-show'></i>
+        </div>
+
+        <label class="checkbox">
+          <input type="checkbox" required />
+          <span>Concordo com os <a href="termos.html" target="_blank">Termos & Condições</a></span>
+        </label>
+
+        <button type="submit" class="create-btn">Criar conta</button>
+      </form>
+
+      <!-- Login -->
+      <form id="loginForm" class="hidden">
+        <h1>Entrar</h1>
+        <p>Ainda não tem conta? 
+          <button type="button" class="switch-btn" id="toSignupBtn">Criar Conta</button>
+        </p>
+
+        <div class="username-group">
+          <input type="email" id="loginEmail" placeholder="Email" required />
+          <i class="bx bx-user"></i>
+        </div>
+
+        <div class="password-group">
+          <input type="password" id="loginPassword" placeholder="Senha" required />
+          <i class='bx bx-show'></i>
+        </div>
+
+        <button type="submit" class="create-btn">Entrar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCGUHsZrauHULqv0hZjv2kko6Hf1CYrFss",
+    authDomain: "login-7a06a.firebaseapp.com",
+    projectId: "login-7a06a",
+    storageBucket: "login-7a06a.appspot.com",
+    messagingSenderId: "812723632015",
+    appId: "1:812723632015:web:d826712b8e4ed032d03dfa",
+    measurementId: "G-T4E21SVBJE"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Alternar formulários
+  const signupForm = document.getElementById('signupForm');
+  const loginForm = document.getElementById('loginForm');
+  document.getElementById('toLoginBtn').addEventListener('click', () => {
+    signupForm.classList.add('hidden');
+    loginForm.classList.remove('hidden');
+  });
+  document.getElementById('toSignupBtn').addEventListener('click', () => {
+    loginForm.classList.add('hidden');
+    signupForm.classList.remove('hidden');
+  });
+
+  const redirectURL = "https://youtube.com"; // Link absoluto do site
+
+  // Cadastro
+  signupForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        console.log("Cadastro realizado com sucesso!");
+        window.location.href = redirectURL;
+      })
+      .catch(error => {
+        console.error("Erro no cadastro:", error.code, error.message);
+        alert("Erro ao criar conta: " + error.message);
+      });
+  });
+
+  // Login
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        console.log("Login realizado com sucesso!");
+        window.location.href = redirectURL;
+      })
+      .catch(error => {
+        console.error("Erro no login:", error.code, error.message);
+        alert("Erro ao fazer login: " + error.message);
+      });
+  });
+</script>
+</body>
+</html>
